@@ -15,6 +15,23 @@ public class User {
         this.password = password;
     }
 
+    public String getPasswordInStars() {
+        String passwordInStars = "";
+        for (int i = 0; i < password.length(); i++) {
+            passwordInStars = passwordInStars + "*";
+        }
+        return passwordInStars;
+    }
+
+    @Override
+    public String toString() {
+        return "Imię: " + firstName + '\n' +
+                "Nazwisko: " + lastName + '\n' +
+                "Nick: " + nickName + '\n' +
+                "Hasło: " + getPasswordInStars()
+                ;
+    }
+
     public String getPassword() {
         return password;
     }

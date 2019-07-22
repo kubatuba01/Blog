@@ -8,9 +8,11 @@ public class Blog implements Commends {
     private List<User> Users = new ArrayList<User>();
     private List<Post> Posts = new ArrayList<Post>();
     static Integer identifier;
+    static Integer entries;
 
     public Blog() {
         identifier = 1000;
+        entries = 0;
     }
 
     public void publishPost(String author, String text) {
@@ -42,7 +44,6 @@ public class Blog implements Commends {
             if (user.getNickName().equals(nickName) && user.getPassword().equals(password))
                 return user;
         }
-        System.out.println("Błędny login lub hasło");
         return null;
     }
 
@@ -55,28 +56,39 @@ public class Blog implements Commends {
         Scanner scn = new Scanner(System.in);
         switch (scn.nextLine()) {
             case "1":
-                System.out.println("Podaj nick: ");
-                String nickName = scn.nextLine();
-                System.out.println("Podaj hasło: ");
-                String password = scn.nextLine();
-                menu(signIn(nickName, password));
+                boolean bool;
+                String nickName;
+                String password;
+                do {
+                    bool = false;
+                    System.out.println("Podaj nick: ");
+                    nickName = scn.nextLine();
+                    System.out.println("Podaj hasło: ");
+                    password = scn.nextLine();
+                    try {
+                        menu(signIn(nickName, password));
+                    } catch (java.lang.NullPointerException e) {
+                        System.out.println("Błędny login lub hasło");
+                        bool = true;
+                    }
+                } while (bool);
                 break;
             case "2":
                 System.out.println("Rejestracja użytkownika " + "\n" + "Podaj imię: ");
                 String firstName = scn.nextLine();
                 System.out.println("Podaj nazwisko: ");
                 String lastName = scn.nextLine();
-                boolean bool = true;
+                boolean bool1 = true;
                 do {
                     System.out.println("Podaj nick: ");
                     nickName = scn.nextLine();
                     for (User element : Users) {
                         if (element.getNickName().equals(nickName)) {
-                            bool = false;
+                            bool1 = false;
                             System.out.println("Ten nick już istnieje");
-                        } else bool = true;
+                        } else bool1 = true;
                     }
-                } while (!bool);
+                } while (!bool1);
                 System.out.println("Podaj hasło: ");
                 password = scn.nextLine();
                 String password2;
@@ -101,8 +113,8 @@ public class Blog implements Commends {
         System.out.println("Witaj " + user.getFirstName() + "!");
         boolean bool = true;
         do {
-            System.out.println("Wybierz opcję:");
-            System.out.println("1 : Opublikuj post" + "\n" + "2 : Skomentuj post po jego ID" + "\n" + "3 : Wypisz wszystkie posty użytkownika" + "\n" + "4 : Wyszukaj po ID" + "\n" + "5 : Wyloguj");
+            System.out.println("Wybierz opcję:" + "                   AKTUALNE WEJŚCIA NA BLOGA: " + entries);
+            System.out.println("1 : Opublikuj post" + "\n" + "2 : Skomentuj post po jego ID" + "\n" + "3 : Wypisz wszystkie posty użytkownika" + "\n" + "4 : Wyszukaj po ID" + "\n" + "5 : Zmień dane"+ "\n" + "6 : Wyloguj");
             Scanner scn = new Scanner(System.in);
             switch (scn.nextLine()) {
                 case "1":
@@ -152,6 +164,33 @@ public class Blog implements Commends {
                     }
                     break;
                 case "5":
+                    System.out.println(user.toString());
+                    System.out.println("\n" + "Wybierz co chcesz zmienić");
+                    System.out.println("1 : Imię" + "\n" + "2 : Nazwisko" + "\n" + "3 : Hasło"+ "\n" + "4 : Anuluj");
+                    boolean bool2 = true;
+                    switch (scn.nextLine()) {
+                        case "1":
+                            System.out.println("Podaj nowe imię:");
+                            user.setFirstName(scn.nextLine());
+                        case "2":
+                            System.out.println("Podaj nowe nazwisko:");
+                            user.setLastName(scn.nextLine());
+                        case "3":
+                            do {
+                                System.out.println("Podaj stare hasło:");
+                                if (scn.nextLine().equals(user.getPassword())) {
+                                    System.out.println("Podaj nowe hasło:");
+                                    user.setPassword(scn.nextLine());
+                                    bool2 = false;
+                                } else System.out.println("Niepoprawne hasło");
+                            } while (bool2);
+                            break;
+                        case "4":
+                            break;
+                        default:
+                            System.out.println("Nie ma takiej opcji");
+                    }
+                case "6":
                     bool = false;
                     break;
                     default:
