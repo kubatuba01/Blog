@@ -122,11 +122,15 @@ public class Blog implements Commends {
                     publishPost(user.getNickName(), scn.nextLine());
                     break;
                 case "2":
-                    int postId;
+                    int postId = 0;
                     boolean bool1 = true;
                     do {
                         System.out.println("Podaj ID posta");
-                        postId = scn.nextInt();
+                        try {
+                            scn = new Scanner(System.in);
+                            postId = scn.nextInt();
+                        } catch (java.util.InputMismatchException e) {
+                        }
                         for (Post post : Posts) {
                             if (post.getId() == postId)
                                 bool1 = false;
@@ -140,63 +144,107 @@ public class Blog implements Commends {
                     commentPost(postId, user.getNickName(), tekst);
                     break;
                 case "3":
-                    System.out.println("Podaj nick użytkownika");
-                    String nick = scn.nextLine();
-                    for (Post post : Posts) {
-                        if (post.getAuthor().equals(nick))
-                            System.out.println("ID: " + post.getId() + "   " + post.getText() + "   data dodania: " + post.getDate());
-                    }
+                    boolean bool2;
+                    do {
+                        bool2 = false;
+                        System.out.println("Podaj nick użytkownika");
+                        String nick = scn.nextLine();
+                        for (Post post : Posts) {
+                            if (post.getAuthor().equals(nick)) {
+                                System.out.println("ID: " + post.getId() + "   " + post.getText() + "   data dodania: " + post.getDate());
+                            } else {
+                                System.out.println("Podałeś błędny nick");
+                                bool2 = true;
+                            }
+                        }
+                    } while (bool2);
                     break;
                 case "4":
-                    System.out.println("Podaj ID");
-                    int id = scn.nextInt();
-                    for (User user1 : Users) {
-                        if (user1.getId() == id)
-                            System.out.println("Użytkownik: " + user1.getNickName());
-                    }
-                    for (Post post1 : Posts) {
-                        if (post1.getId() == id)
-                            System.out.println("Post użytkownika " + post1.getAuthor() + ": " + post1.getText() + "   data dodania: " + post1.getDate());
-                        for (Comment com1 : post1.getComments()) {
-                            if (com1.getId() == id)
-                                System.out.println("Komentarz użytkownika " + com1.getAuthor() + ": " + com1.getText() + "   data dodania: " + com1.getDate());
+                    boolean bool4;
+                    do {
+                        bool4 = false;
+                        System.out.println("Podaj ID");
+                        int id;
+                        try {
+                            scn = new Scanner(System.in);
+                            id = scn.nextInt();
+                        } catch (java.util.InputMismatchException e) {
+                            System.out.println("Błędny ID");
+                            break;
                         }
-                    }
+                        for (User user1 : Users) {
+                            if (user1.getId() == id) {
+                                System.out.println("Użytkownik: " + user1.getNickName());
+                                break;
+                            }
+                        }
+                        if (!Posts.isEmpty()) {
+                            for (Post post1 : Posts) {
+                                if (post1.getId() == id) {
+                                    System.out.println("Post użytkownika " + post1.getAuthor() + ": " + post1.getText() + "   data dodania: " + post1.getDate());
+                                    break;
+                                }
+                                if (!post1.getComments().isEmpty()) {
+                                    for (Comment com1 : post1.getComments()) {
+                                        if (com1.getId() == id) {
+                                            System.out.println("Komentarz użytkownika " + com1.getAuthor() + ": " + com1.getText() + "   data dodania: " + com1.getDate());
+                                            break;
+                                        } else {
+                                            System.out.println("Nie ma takiego ID");
+                                            bool4 = true;
+                                        }
+                                    }
+                                } else
+                                    System.out.println("Nie ma takiego ID");
+                            }
+                        } else
+                            System.out.println("Nie ma takiego ID");
+                    } while (bool4);
                     break;
                 case "5":
+                    boolean bool5;
                     System.out.println(user.toString());
-                    System.out.println("\n" + "Wybierz co chcesz zmienić");
-                    System.out.println("1 : Imię" + "\n" + "2 : Nazwisko" + "\n" + "3 : Hasło"+ "\n" + "4 : Anuluj");
-                    boolean bool2 = true;
-                    switch (scn.nextLine()) {
-                        case "1":
-                            System.out.println("Podaj nowe imię:");
-                            user.setFirstName(scn.nextLine());
-                        case "2":
-                            System.out.println("Podaj nowe nazwisko:");
-                            user.setLastName(scn.nextLine());
-                        case "3":
-                            do {
-                                System.out.println("Podaj stare hasło:");
-                                if (scn.nextLine().equals(user.getPassword())) {
-                                    System.out.println("Podaj nowe hasło:");
-                                    user.setPassword(scn.nextLine());
-                                    bool2 = false;
-                                } else System.out.println("Niepoprawne hasło");
-                            } while (bool2);
-                            break;
-                        case "4":
-                            break;
-                        default:
-                            System.out.println("Nie ma takiej opcji");
-                    }
+                    do {
+                        bool5 = false;
+                        System.out.println("\n" + "Wybierz co chcesz zmienić");
+                        System.out.println("1 : Imię" + "\n" + "2 : Nazwisko" + "\n" + "3 : Hasło" + "\n" + "4 : Anuluj");
+                        boolean bool3 = true;
+                        switch (scn.nextLine()) {
+                            case "1":
+                                System.out.println("Podaj nowe imię:");
+                                user.setFirstName(scn.nextLine());
+                                System.out.println("Zapisano nowe imię: " + user.getFirstName());
+                                break;
+                            case "2":
+                                System.out.println("Podaj nowe nazwisko:");
+                                user.setLastName(scn.nextLine());
+                                System.out.println("Zapisano nowe nazwisko: " + user.getLastName());
+                                break;
+                            case "3":
+                                do {
+                                    System.out.println("Podaj stare hasło:");
+                                    if (scn.nextLine().equals(user.getPassword())) {
+                                        System.out.println("Podaj nowe hasło:");
+                                        user.setPassword(scn.nextLine());
+                                        bool3 = false;
+                                        System.out.println("Zmieniłeś hasło");
+                                    } else System.out.println("Niepoprawne hasło");
+                                } while (bool3);
+                                break;
+                            case "4":
+                                break;
+                            default:
+                                System.out.println("Nie ma takiej opcji");
+                                bool5 = true;
+                        }
+                    } while (bool5);
+                    break;
                 case "6":
                     bool = false;
                     break;
                     default:
                         System.out.println("Nie ma takiej opcji");
             }
-
         } while (bool);
         start();
     }

@@ -3,12 +3,12 @@ package Blog;
 import java.util.GregorianCalendar;
 
 public abstract class Entry {
-    private int id;
+    private Integer id;
     private String date;
     private String author;
     private String text;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
